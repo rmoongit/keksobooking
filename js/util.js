@@ -37,5 +37,5 @@ export {
   getRandomArrayElement,
   getNumberWithLeadZero,
   generateAvatar,
-  shuffledArray
+  shuffledArray,
 };

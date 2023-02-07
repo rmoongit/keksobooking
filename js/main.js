@@ -1,3 +1,1 @@
-import { createSimilarObjects } from './data.js';
-
-console.log(createSimilarObjects);
+import './generate-data.js';

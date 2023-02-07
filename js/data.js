@@ -1,4 +1,4 @@
-import {getRandomFloat, generateAvatar, getRandomArrayElement, getRandomInteger, shuffledArray} from './util.js';
+import {getRandomFloat, generateAvatar, getRandomArrayElement, getRandomInteger, shuffledArray,} from './util.js';
 
 const LOCATION = {
   MIN_LAT: 35.65,
@@ -78,7 +78,7 @@ const createObject = (id = 1) => {
       checkout: getRandomArrayElement(CHECK_IN_OUT),
       features: shuffledArray(FEATURES).slice(0, getRandomInteger(0, FEATURES.length)),
       description: getRandomArrayElement(DESCRIPTIONS),
-      photos: getRandomArrayElement(PHOTOS),
+      photos: getRandomArrayElement(PHOTOS), //here
     },
 
     location: {
@@ -88,6 +88,6 @@ const createObject = (id = 1) => {
   };
 };
 
-const createSimilarObjects = Array.from({length: 10}, (_, id) => createObject(++id));
+const createSimilarObjects = Array.from({length: 1}, (_, id) => createObject(++id));
 
 export {createSimilarObjects};
