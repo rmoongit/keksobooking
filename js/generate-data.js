@@ -1,49 +1,100 @@
-import { createSimilarObjects } from './data.js';
+import { TYPE_FLATS } from './mocks.js';
 
 const cardTemplateElement = document.querySelector('#card').content.querySelector('.popup');
 const mapBlockElement = document.querySelector('.map__canvas');
+const photoTemplateElement = cardTemplateElement.querySelector('.popup__photo');
 
-const renameTypeOfFlat = (dataObject) => {
-  switch (dataObject) {
-    case 'flat':
-      return 'Квартира';
+// Наполняет элемент по заданному селектору и возвращает его
+const getElementFiller = (template) => {
+  const fillElement = (selector, data = '', createChildElement) => {
 
-    case 'bungalow':
-      return 'Бунгало';
+    const element = template.querySelector(selector);
+    const content = data.toString();
 
-    case 'house':
-      return 'Дом';
+    if (Array.isArray(data) && data.length) {
+      if (typeof createChildElement === 'function') {
+        element.innerHTML = '';
+        data.forEach((item) => {
+          element.append(createChildElement(item));
+        });
 
-    case 'palace':
-      return 'Дворец';
+      } else {
+        element.textContent = data.join(', ');
+      }
+    }
 
-    case 'hotel':
-      return 'Отель';
-  }
+    else if (content) {
+      element.textContent = content;
+    } else {
+      element.classList.add('visually-hidden');
+    }
+  };
+
+
+  return fillElement;
 };
 
-// foo generate count of objects with different param
-const generateData = (data) => {
+
+// Генерирует количество карточек со своими параметрами.
+const generateCards = (data) => {
   const fragmentElement = document.createDocumentFragment();
 
-  data.forEach(({offer}) => {
-    const templateClonedElement = cardTemplateElement.cloneNode(true);
+  data.forEach(({author, offer}) => {
+    const cardElement = cardTemplateElement.cloneNode(true);
+    const fillElement = getElementFiller(cardElement);
 
-    templateClonedElement.querySelector('.popup__title').textContent = `${offer.title}`;
-    templateClonedElement.querySelector('.popup__text--address').textContent = `${offer.address}`;
-    templateClonedElement.querySelector('.popup__text--price').textContent = `${offer.price}  ₽/ночь`;
-    templateClonedElement.querySelector('.popup__type').textContent = renameTypeOfFlat(`${offer.type}`);
-    templateClonedElement.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
-    templateClonedElement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
-    templateClonedElement.querySelector('.popup__features').textContent = `${offer.features}`;
-    templateClonedElement.querySelector('.popup__description').textContent = `${offer.description}`;
-    templateClonedElement.querySelector('.popup__photos img').src = `${offer.photos}`; //Остановился тут
-    templateClonedElement.querySelector('.popup__avatar');
+    // Заголовок объявления
+    fillElement('.popup__title', offer.title);
 
-    fragmentElement.append(templateClonedElement);
+    // Адрес объявления
+    fillElement('.popup__text--address', offer.address);
+
+    // Цена жилья
+    fillElement('.popup__text--price', offer.price);
+
+    // Тип жилья
+    fillElement('.popup__type', TYPE_FLATS[offer.type]);
+
+    // Количество комнат
+    fillElement('.popup__text--capacity', `${offer.rooms} комнаты для ${offer.guests} гостей`);
+
+    // Время заезда и выезда
+    fillElement('.popup__text--time', `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`);
+
+    // Доступные удобства
+    fillElement('.popup__features', offer.features, (feature) => {
+      const featureElement = document.createElement('li');
+      featureElement.classList.add('popup__feature', `popup__feature--${feature}`);
+
+      return featureElement;
+    });
+
+    // Описание объявления
+    fillElement('.popup__description', offer.description);
+
+    // Фотографии объявления
+    fillElement('.popup__photos', offer.photos, (photo) => {
+      const photoElement = photoTemplateElement.cloneNode();
+      photoElement.src = photo;
+
+      return photoElement;
+    });
+
+    // Аватар пользователя
+    const avatarElement = cardElement.querySelector('.popup__avatar');
+    if (author.avatar) {
+      avatarElement.src = author.avatar;
+    } else {
+      avatarElement.remove();
+    }
+
+    // Вставляем во фрагмент
+    fragmentElement.append(cardElement);
   });
+
+  // Вставляем фрагмент в наш список
   mapBlockElement.append(fragmentElement);
 };
 
-console.log(generateData(createSimilarObjects));
+export {generateCards};
 

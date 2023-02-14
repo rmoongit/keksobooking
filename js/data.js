@@ -1,4 +1,10 @@
-import {getRandomFloat, generateAvatar, getRandomArrayElement, getRandomInteger, shuffledArray,} from './util.js';
+import {
+  getRandomFloat,
+  generateAvatar,
+  getRandomArrayElement,
+  getRandomInteger,
+  shuffledArray
+} from './util.js';
 
 const LOCATION = {
   MIN_LAT: 35.65,
@@ -56,7 +62,7 @@ const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
 ];
 
-//Objects
+// Создаёт Объект
 const createObject = (id = 1) => {
   const {MIN_LAT, MAX_LAT, MIN_LNG, MAX_LNG} = LOCATION;
   const lat = getRandomFloat(MIN_LAT, MAX_LAT, 5);
@@ -78,7 +84,7 @@ const createObject = (id = 1) => {
       checkout: getRandomArrayElement(CHECK_IN_OUT),
       features: shuffledArray(FEATURES).slice(0, getRandomInteger(0, FEATURES.length)),
       description: getRandomArrayElement(DESCRIPTIONS),
-      photos: getRandomArrayElement(PHOTOS), //here
+      photos: shuffledArray(PHOTOS).slice(0, getRandomInteger(0, PHOTOS.length)),
     },
 
     location: {
@@ -88,6 +94,7 @@ const createObject = (id = 1) => {
   };
 };
 
+// Создаёт массив наших объектов
 const createSimilarObjects = Array.from({length: 1}, (_, id) => createObject(++id));
 
 export {createSimilarObjects};

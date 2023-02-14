@@ -22,14 +22,13 @@ const getNumberWithLeadZero = (num) => `${num < 10 ? '0' : ''}${num}`;
 
 // function generate string
 const generateAvatar = (num) => {
-  const string = `img/avatars/user/${getNumberWithLeadZero(num)}.png`;
+  const string = `img/avatars/user${getNumberWithLeadZero(num)}.png`;
 
   return string;
 };
 
 // function shich is shuffled array
 const shuffledArray = (array) => array.sort(() => Math.random() - 0.5);
-
 
 export {
   getRandomInteger,
