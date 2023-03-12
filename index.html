@@ -140,6 +140,7 @@
         <h2 class="notice__title">Ваше объявление</h2>
         <form
           class="ad-form"
+          action="https://26.javascript.pages.academy/keksobooking"
           method="post"
           enctype="multipart/form-data"
           autocomplete="off"
@@ -186,13 +187,24 @@
               name="title"
               type="text"
               placeholder="Милая, уютная квартирка в центре Токио"
+              minlength="30"
+              maxlength="100"
+              required
+              data-pristine-required-message="Обязательное поле *"
+              data-pristine-minlength-message="Минимальная длина 30 символов"
             />
           </fieldset>
           <fieldset class="ad-form__element ad-form__element--wide">
             <label class="ad-form__label" for="address"
               >Адрес (координаты)</label
             >
-            <input id="address" name="address" type="text" />
+            <input
+              id="address"
+              name="address"
+              type="text"
+              required
+              data-pristine-required-message="Обязательное поле *"
+            />
           </fieldset>
           <fieldset class="ad-form__element">
             <label class="ad-form__label" for="type">Тип жилья</label>
@@ -206,7 +218,14 @@
           </fieldset>
           <fieldset class="ad-form__element">
             <label class="ad-form__label" for="price">Цена за ночь, руб.</label>
-            <input id="price" name="price" type="number" placeholder="5000" />
+            <input
+              id="price"
+              name="price"
+              type="number"
+              placeholder="5000"
+              required
+              data-pristine-required-message="Обязательное поле *"
+            />
             <div class="ad-form__slider"></div>
           </fieldset>
           <fieldset class="ad-form__element ad-form__element--time">
@@ -457,6 +476,7 @@
       </div>
     </template>
 
+    <script src="pristine/pristine.min.js"></script>
     <script src="/js/main.js" type="module"></script>
   </body>
 </html>

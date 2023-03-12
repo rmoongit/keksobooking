@@ -18,4 +18,4 @@ const toggleActivityForm = (activate) => {
   }
 };
 
-toggleActivityForm(false);
+toggleActivityForm(true);

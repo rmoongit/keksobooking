@@ -353,6 +353,10 @@ fieldset {
   font-size: 14px;
 }
 
+.ad-form__element--error {
+  color: #ff5635;
+}
+
 .ad-form__element--wide {
   -ms-flex-preferred-size: 50%;
       flex-basis: 50%;

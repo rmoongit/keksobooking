@@ -3,8 +3,14 @@ import {
   generateAvatar,
   getRandomArrayElement,
   getRandomInteger,
-  shuffledArray
+  shuffledArray,
+
 } from './util.js';
+
+import {
+  TYPE_FLATS,
+
+} from './mocks.js';
 
 const LOCATION = {
   MIN_LAT: 35.65,
@@ -14,18 +20,18 @@ const LOCATION = {
 };
 
 const ROOMS = {
-  MIN_ROOM: 1,
-  MAX_ROOM: 5,
+  min: 1,
+  max: 5,
 };
 
 const GUESTS = {
-  MIN_GUEST: 1,
-  MAX_GUEST: 5,
+  min: 1,
+  max: 5,
 };
 
 const PRICES = {
-  MIN: 1000,
-  MAX: 5000,
+  min: 1000,
+  max: 5000,
 };
 
 const CHECK_IN_OUT = [
@@ -40,10 +46,6 @@ const OFFERS = [
   'Новый лофт',
   'Евро стандарт',
   'Фаворит',
-];
-
-const FLAT_TYPES = [
-  'palace', 'flat', 'house', 'bungalow', 'hotel'
 ];
 
 const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -62,11 +64,16 @@ const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
 ];
 
+const getRandomCheckIndex = () => getRandomInteger(0, CHECK_IN_OUT.length - 1);
+
 // Создаёт Объект
 const createObject = (id = 1) => {
   const {MIN_LAT, MAX_LAT, MIN_LNG, MAX_LNG} = LOCATION;
   const lat = getRandomFloat(MIN_LAT, MAX_LAT, 5);
   const lng = getRandomFloat(MIN_LNG, MAX_LNG, 5);
+  //Формируем массив случайных индексов
+  const checks = [getRandomCheckIndex(), getRandomCheckIndex()];
+
 
   return {
     author: {
@@ -76,12 +83,12 @@ const createObject = (id = 1) => {
     offer: {
       title: getRandomArrayElement(OFFERS),
       address: `${lat}, ${lng}`,
-      price: getRandomInteger(PRICES.MIN, PRICES.MAX),
-      type: getRandomArrayElement(FLAT_TYPES),
-      rooms: getRandomInteger(ROOMS.MIN_ROOM,ROOMS.MAX_ROOM),
-      guests: getRandomInteger(GUESTS.MIN_GUEST, GUESTS.MAX_GUEST),
-      checkin: getRandomArrayElement(CHECK_IN_OUT),
-      checkout: getRandomArrayElement(CHECK_IN_OUT),
+      price: getRandomInteger(PRICES.min, PRICES.max),
+      type: getRandomArrayElement(Object.keys(TYPE_FLATS)),
+      rooms: getRandomInteger(ROOMS.min, ROOMS.max),
+      guests: getRandomInteger(GUESTS.min, GUESTS.max),
+      checkin: CHECK_IN_OUT[Math.min(...checks)],
+      checkout: CHECK_IN_OUT[Math.max(...checks)],
       features: shuffledArray(FEATURES).slice(0, getRandomInteger(0, FEATURES.length)),
       description: getRandomArrayElement(DESCRIPTIONS),
       photos: shuffledArray(PHOTOS).slice(0, getRandomInteger(0, PHOTOS.length)),

@@ -53,7 +53,7 @@ const generateCards = (data) => {
     fillElement('.popup__text--price', offer.price);
 
     // Тип жилья
-    fillElement('.popup__type', TYPE_FLATS[offer.type]);
+    fillElement('.popup__type', TYPE_FLATS[offer.type].name);
 
     // Количество комнат
     fillElement('.popup__text--capacity', `${offer.rooms} комнаты для ${offer.guests} гостей`);
