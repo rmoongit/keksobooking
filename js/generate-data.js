@@ -1,7 +1,6 @@
 import { TYPE_FLATS } from './mocks.js';
 
 const cardTemplateElement = document.querySelector('#card').content.querySelector('.popup');
-const mapBlockElement = document.querySelector('.map__canvas');
 const photoTemplateElement = cardTemplateElement.querySelector('.popup__photo');
 
 // Наполняет элемент по заданному селектору и возвращает его
@@ -92,9 +91,8 @@ const generateCards = (data) => {
     fragmentElement.append(cardElement);
   });
 
-  // Вставляем фрагмент в наш список
-  mapBlockElement.append(fragmentElement);
+  return fragmentElement; //не забыть вставить фрагмент в блок
 };
 
-export {generateCards};
+export { generateCards };
 

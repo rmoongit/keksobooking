@@ -1,6 +1,22 @@
-import {generateCards} from './generate-data.js';
+import { generateCards } from './generate-data.js';
 import { createSimilarObjects } from './data.js';
-import './form.js';
+
+//Leaflet карта
+import { initMap } from './map.js';
+
+//Валидация Формы
 import './form-validate.js';
 
-generateCards(createSimilarObjects);
+window.addEventListener('DOMContentLoaded', () => {
+
+  window.addEventListener('load', () => {
+
+    //Генерируем Объекты
+    generateCards(createSimilarObjects);
+
+    //Инициализируем карту
+    initMap();
+  });
+
+});
+
