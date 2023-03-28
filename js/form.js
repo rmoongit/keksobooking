@@ -1,21 +1,27 @@
 
+
+const forms = ['ad-form', 'map__filters'].map((selector) => {
+  const form = document.querySelector(`.${selector}`);
+  //Возвращаем новый объект: каждой формы, все поля форм, и класс disabled формы
+  return {
+    form,
+    parts: document.querySelectorAll('fieldset', 'select'),
+    disabledClass: `${selector}--disabled`
+  };
+});
+
 // Активирует и дезактивирует формы в зависимости от параметра true или false;
 const toggleActivityForm = (activate) => {
 
-  const formParentElements = document.querySelectorAll('.ad-form, .map__filters');
-  const formElements = document.querySelectorAll('fieldset, select');
+  forms.forEach(({form, parts, disabledClass}) => {
+    // Проверка на параметр
+    form.classList[activate ? 'remove' : 'add'](disabledClass);
 
-  // Проверка на параметр
-  if (!activate) {
-    formParentElements.forEach((parent) => {
-      const classNameElement = parent.className;
-      parent.classList.add(`${classNameElement  }--disabled`);
+    parts.forEach((part) => {
+      part.disabled = !activate;
     });
 
-    formElements.forEach((element) => {
-      element.disabled = !activate;
-    });
-  }
+  });
 };
 
 export { toggleActivityForm };

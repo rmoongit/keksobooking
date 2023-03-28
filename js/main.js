@@ -1,5 +1,9 @@
-import { generateCards } from './generate-data.js';
-import { createSimilarObjects } from './data.js';
+
+import { createMocks } from './data.js';
+import { toggleActivityForm } from './form.js';
+
+//NoUiSlider
+import   { initNoUiSlider } from './slider.js';
 
 //Leaflet карта
 import { initMap } from './map.js';
@@ -11,12 +15,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('load', () => {
 
-    //Генерируем Объекты
-    generateCards(createSimilarObjects);
+    //Форма не доступна
+    toggleActivityForm(false);
 
     //Инициализируем карту
-    initMap();
+    initMap(createMocks);
+
+    //Инициализируем слайдер
+    initNoUiSlider();
   });
 
 });
 
+//6. С помощью API карт реализуйте показ балуна с подробной информацией об объявлении. Учтите нюансы поведения и ограничения для обычных меток и главной.

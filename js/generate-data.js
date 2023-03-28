@@ -29,13 +29,12 @@ const getElementFiller = (template) => {
     }
   };
 
-
   return fillElement;
 };
 
 
 // Генерирует количество карточек со своими параметрами.
-const generateCards = (data) => {
+const createCards = (data) => {
   const fragmentElement = document.createDocumentFragment();
 
   data.forEach(({author, offer}) => {
@@ -44,19 +43,14 @@ const generateCards = (data) => {
 
     // Заголовок объявления
     fillElement('.popup__title', offer.title);
-
     // Адрес объявления
     fillElement('.popup__text--address', offer.address);
-
     // Цена жилья
     fillElement('.popup__text--price', offer.price);
-
     // Тип жилья
     fillElement('.popup__type', TYPE_FLATS[offer.type].name);
-
     // Количество комнат
     fillElement('.popup__text--capacity', `${offer.rooms} комнаты для ${offer.guests} гостей`);
-
     // Время заезда и выезда
     fillElement('.popup__text--time', `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`);
 
@@ -87,12 +81,12 @@ const generateCards = (data) => {
       avatarElement.remove();
     }
 
-    // Вставляем во фрагмент
     fragmentElement.append(cardElement);
   });
 
-  return fragmentElement; //не забыть вставить фрагмент в блок
+  //возвращаем фрагмент
+  return fragmentElement;
 };
 
-export { generateCards };
+export { createCards };
 

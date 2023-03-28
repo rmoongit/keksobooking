@@ -265,6 +265,12 @@ fieldset {
   width: 100%;
 }
 
+.ad-form__slider {
+  margin-top: 8px;
+  margin-bottom: 5px;
+  width: 90%;
+}
+
 .ad-form--disabled {
   opacity: 0.3;
   pointer-events: none;

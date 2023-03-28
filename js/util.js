@@ -1,33 +1,33 @@
 
-// function genereate random integer from min to max
+// Функция генерирует случайное число от минимума(включая) до максимума
 const getRandomInteger = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min; //Максимум и минимум включаются
 };
 
-//function generate random integer with float decimals
+// Функция генерирует случайные числа с плавающей точкой
 function getRandomFloat(min, max, decimals = 1) {
   const result = (Math.random() * (max - min) + min);
 
   return +result.toFixed(decimals);
 }
 
-// function generate random index array element
+// Функция генерирует случайный элемент массива
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-// function for lead zero
+// Функция с ведущим нулём
 const getNumberWithLeadZero = (num) => `${num < 10 ? '0' : ''}${num}`;
 
 
-// function generate string
+// Функция генерирует строку с Аватркой
 const generateAvatar = (num) => {
   const string = `img/avatars/user${getNumberWithLeadZero(num)}.png`;
 
   return string;
 };
 
-// function shich is shuffled array
+// Функция перемешивает наш массив
 const shuffledArray = (array) => array.sort(() => Math.random() - 0.5);
 
 export {

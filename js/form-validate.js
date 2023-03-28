@@ -1,4 +1,5 @@
 import { TYPE_FLATS } from './mocks.js';
+import { sliderElement } from './slider.js';
 
 const form = document.querySelector('.ad-form');
 
@@ -91,9 +92,20 @@ const validCapacityMessage = () => {
 typeFieldElement.addEventListener('change', (evt) => {
 
   for (const key in TYPE_FLATS) {
+
     if (evt.target.value === key) {
       priceFieldElement.value = '';
       priceFieldElement.placeholder = `${TYPE_FLATS[key].price}`;
+
+      //Обновляем значение слайдера по объекту
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: TYPE_FLATS[key].price,
+          max: TYPE_FLATS[key].max ? TYPE_FLATS[key].max : 100000
+        },
+        step: TYPE_FLATS[key].step,
+      });
+      sliderElement.noUiSlider.set(TYPE_FLATS[key].price);
     }
   }
 });
@@ -146,3 +158,5 @@ capacityFieldElement.addEventListener('change', () => {
   pristine.validate(roomsFieldElement);
 });
 
+
+export { priceFieldElement, typeFieldElement };

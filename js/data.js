@@ -102,6 +102,6 @@ const createObject = (id = 1) => {
 };
 
 // Создаёт массив наших объектов
-const createSimilarObjects = Array.from({length: 1}, (_, id) => createObject(++id));
+const createMocks = Array.from({length: 5}, (_, id) => createObject(++id));
 
-export {createSimilarObjects};
+export { createMocks };
