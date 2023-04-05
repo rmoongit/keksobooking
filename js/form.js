@@ -1,3 +1,4 @@
+import { initValidate } from './form-validate.js';
 
 
 const forms = ['ad-form', 'map__filters'].map((selector) => {
@@ -11,9 +12,12 @@ const forms = ['ad-form', 'map__filters'].map((selector) => {
 });
 
 // Активирует и дезактивирует формы в зависимости от параметра true или false;
-const toggleActivityForm = (activate) => {
+const toggleActivityForm = (activate, onCloseHandler) => {
+//Вызываем валидацию
+  initValidate();
 
   forms.forEach(({form, parts, disabledClass}) => {
+
     // Проверка на параметр
     form.classList[activate ? 'remove' : 'add'](disabledClass);
 
@@ -22,6 +26,11 @@ const toggleActivityForm = (activate) => {
     });
 
   });
+
+  //проверяем если `false` - выполняем функцию
+  if (!activate) {
+    onCloseHandler();
+  }
 };
 
 export { toggleActivityForm };

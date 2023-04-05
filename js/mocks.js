@@ -6,7 +6,6 @@ const TYPE_FLATS = {
     price: 1000,
 
     step: 100,
-    max: 5000,
   },
 
   bungalow: {

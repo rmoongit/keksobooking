@@ -1,24 +1,23 @@
-import { priceFieldElement } from './form-validate.js';
 
-const sliderElement = document.querySelector('.ad-form__slider');
-
-const initNoUiSlider = () => {
+const createUiSlider = (sliderElement, minPrice, sliderHandler) => {
+  const STEP = 1000;
 
   // Создаём слайдер и привязываем к блоку цен
   noUiSlider.create(sliderElement, {
 
     //Параметры слайдера
     range: {
-      min: +priceFieldElement.placeholder,
+      min: +minPrice.placeholder,
       max: 100000,
     },
     start: 0,
+    step: STEP,
     connect: 'lower',
 
     format: {
       to: function(value) {
-        //проверка на целостность числа
-        return  Number.isInteger(value) ?  value.toFixed(0) : value.toFixed(0);
+        //выводим целое число без плавающей точки
+        return  value.toFixed(0);
       },
 
       from: function(value) {
@@ -29,14 +28,11 @@ const initNoUiSlider = () => {
 
   });
 
-  //Выводим значение слайдера
-  sliderElement.noUiSlider.on('update', () => {
-    priceFieldElement.value = sliderElement.noUiSlider.get();
-  });
+  //Выполняем передоваемую функцию на слайдере
+  sliderElement.noUiSlider.on('slide', sliderHandler);
 
+  return sliderElement.noUiSlider;
 };
 
-//Доделать слайдер!
-
-export { initNoUiSlider, sliderElement };
+export { createUiSlider };
 

@@ -1,10 +1,13 @@
 import { TYPE_FLATS } from './mocks.js';
-import { sliderElement } from './slider.js';
+import { createUiSlider } from './slider.js';
 
 const form = document.querySelector('.ad-form');
 
 const titleFieldElement = form.querySelector('[name="title"]');
 const priceFieldElement = form.querySelector('[name="price"]');
+
+//slider
+const sliderElement = document.querySelector('.ad-form__slider');
 
 //roomsFields
 const roomsFieldElement = form.querySelector('[name="rooms"]');
@@ -33,18 +36,22 @@ const pristine = new Pristine(form, {
   errorTextClass: 'ad-form__element--error'
 });
 
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
+const initValidate = () => {
 
-  const valid = pristine.validate();
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault(); //Заглушку потом убрать.
 
-  if (valid) {
-    console.log('Провалидировано');
-  } else {
-    console.log('Не валидно');
-  }
+    const valid = pristine.validate();
 
-});
+    if (valid) {
+      console.log('Провалидировано');
+    } else {
+      throw new Error('Форма не валидна');
+    }
+
+  });
+};
+
 
 //---------Валидация Заголовка------------//
 
@@ -85,6 +92,13 @@ const validCapacityMessage = () => {
       return `${value} комнат не для котов, а для птенцов.`;
   }
 };
+
+//Создаём и инициализируем слайдер!
+const priceUiSlider = createUiSlider(sliderElement, priceFieldElement, () => {
+  priceFieldElement.value = priceUiSlider.get();
+
+  pristine.validate(priceFieldElement);
+});
 
 //---------Валидация Типа жилья------------//
 
@@ -159,4 +173,4 @@ capacityFieldElement.addEventListener('change', () => {
 });
 
 
-export { priceFieldElement, typeFieldElement };
+export { initValidate, priceUiSlider };
