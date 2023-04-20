@@ -3,13 +3,19 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.resetSlider = resetSlider;
 exports.priceUiSlider = exports.initValidate = void 0;
 
 var _mocks = require("./mocks.js");
 
 var _slider = require("./slider.js");
 
+var _api = require("./api.js");
+
+var _util = require("./util.js");
+
 var form = document.querySelector('.ad-form');
+var formButtonElement = form.querySelector('.ad-form__submit');
 var titleFieldElement = form.querySelector('[name="title"]');
 var priceFieldElement = form.querySelector('[name="price"]'); //slider
 
@@ -36,17 +42,37 @@ var pristine = new Pristine(form, {
   errorTextClass: 'ad-form__element--error'
 });
 
-var initValidate = function initValidate() {
-  form.addEventListener('submit', function (evt) {
-    evt.preventDefault(); //Заглушку потом убрать.
+var buttonBlock = function buttonBlock() {
+  formButtonElement.disabled = 'true';
+  formButtonElement.textContent = 'Опубликовываю...';
+};
 
+var buttonUnBlock = function buttonUnBlock() {
+  formButtonElement.removeAttribute('disabled');
+  formButtonElement.textContent = 'Опубликовать';
+}; //Иницилизация валидации
+
+
+var initValidate = function initValidate() {
+  //Отправка формы
+  form.addEventListener('submit', function (evt) {
     var valid = pristine.validate();
+    evt.preventDefault();
 
     if (valid) {
-      console.log('Провалидировано');
-    } else {
-      throw new Error('Форма не валидна');
-    }
+      buttonBlock(); //Выполняем запрос postData(с аргументами)
+
+      return (0, _api.postData)(new FormData(evt.target), function () {
+        return buttonUnBlock();
+      }, function () {
+        return (0, _util.showSuccess)();
+      }, function () {
+        return (0, _util.showError)();
+      });
+    } //В случае невалидности, возвращаем ошибку
+
+
+    return (0, _util.showError)();
   });
 }; //---------Валидация Заголовка------------//
 // Проверка поля заголовка объявления
@@ -94,10 +120,30 @@ var validCapacityMessage = function validCapacityMessage() {
 var priceUiSlider = (0, _slider.createUiSlider)(sliderElement, priceFieldElement, function () {
   priceFieldElement.value = priceUiSlider.get();
   pristine.validate(priceFieldElement);
-}); //---------Валидация Типа жилья------------//
-//Задаём минимальную цену - если выбран данный ${target}
+}); //Сбрасываем Слайдер
 
 exports.priceUiSlider = priceUiSlider;
+
+function resetSlider() {
+  //Сброс самого слайда
+  priceUiSlider.reset();
+
+  for (var key in _mocks.TYPE_FLATS) {
+    if (typeFieldElement.value === key) {
+      //Обновляем значение слайдера по объекту
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: _mocks.TYPE_FLATS[key].price,
+          max: _mocks.TYPE_FLATS[key].max ? _mocks.TYPE_FLATS[key].max : 100000
+        }
+      });
+      priceFieldElement.placeholder = "".concat(_mocks.TYPE_FLATS[key].price);
+    }
+  }
+} //---------Валидация Типа жилья------------//
+//Задаём минимальную цену - если выбран данный ${target}
+
+
 typeFieldElement.addEventListener('change', function (evt) {
   for (var key in _mocks.TYPE_FLATS) {
     if (evt.target.value === key) {

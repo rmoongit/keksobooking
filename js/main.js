@@ -1,7 +1,7 @@
 
-import { createMocks } from './data.js';
 import { toggleActivityForm } from './form.js';
 import { priceUiSlider } from './form-validate.js';
+import { getData } from './api.js';
 
 //Leaflet карта
 import { initMap } from './map.js';
@@ -12,7 +12,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     try {
       //Инициализируем карту
-      initMap(createMocks);
+      getData((data) => {
+        initMap(data.slice(0, 10));
+      });
+
     } catch(error) {
       //Форма не доступна
       toggleActivityForm(false, priceUiSlider.destroy);
@@ -21,3 +24,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 });
 
+//Доделать ОТправку формы!!!
+//Доделать ОТправку формы!!!
+//Доделать ОТправку формы!!!
+//Доделать ОТправку формы!!!

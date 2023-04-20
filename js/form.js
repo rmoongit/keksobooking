@@ -1,4 +1,9 @@
-import { initValidate } from './form-validate.js';
+
+
+import { initValidate, resetSlider } from './form-validate.js';
+import { resetMap } from './map.js';
+
+const reset = document.querySelector('.ad-form__reset');
 
 
 const forms = ['ad-form', 'map__filters'].map((selector) => {
@@ -25,6 +30,16 @@ const toggleActivityForm = (activate, onCloseHandler) => {
       part.disabled = !activate;
     });
 
+    //Сброс формы на кнопку reset
+    reset.addEventListener('click', (evt) => {
+      evt.preventDefault();
+
+      form.reset();
+
+      resetSlider();
+      resetMap();
+    });
+
   });
 
   //проверяем если `false` - выполняем функцию
@@ -33,4 +48,4 @@ const toggleActivityForm = (activate, onCloseHandler) => {
   }
 };
 
-export { toggleActivityForm };
+export { toggleActivityForm, forms };

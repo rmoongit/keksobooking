@@ -1,7 +1,11 @@
 import { TYPE_FLATS } from './mocks.js';
 import { createUiSlider } from './slider.js';
+import { postData } from './api.js';
+import { showSuccess, showError } from './util.js';
 
 const form = document.querySelector('.ad-form');
+const formButtonElement = form.querySelector('.ad-form__submit');
+
 
 const titleFieldElement = form.querySelector('[name="title"]');
 const priceFieldElement = form.querySelector('[name="price"]');
@@ -36,19 +40,33 @@ const pristine = new Pristine(form, {
   errorTextClass: 'ad-form__element--error'
 });
 
+const buttonBlock = () => {
+  formButtonElement.disabled = 'true';
+  formButtonElement.textContent = 'Опубликовываю...';
+};
+
+
+const buttonUnBlock = () => {
+  formButtonElement.removeAttribute('disabled');
+  formButtonElement.textContent = 'Опубликовать';
+};
+
+//Иницилизация валидации
 const initValidate = () => {
 
+  //Отправка формы
   form.addEventListener('submit', (evt) => {
-    evt.preventDefault(); //Заглушку потом убрать.
 
     const valid = pristine.validate();
+    evt.preventDefault();
 
     if (valid) {
-      console.log('Провалидировано');
-    } else {
-      throw new Error('Форма не валидна');
+      buttonBlock();
+      //Выполняем запрос postData(с аргументами)
+      return postData(new FormData(evt.target),  () => buttonUnBlock(), () => showSuccess(), () => showError());
     }
-
+    //В случае невалидности, возвращаем ошибку
+    return showError();
   });
 };
 
@@ -99,6 +117,27 @@ const priceUiSlider = createUiSlider(sliderElement, priceFieldElement, () => {
 
   pristine.validate(priceFieldElement);
 });
+
+//Сбрасываем Слайдер
+function resetSlider() {
+  //Сброс самого слайда
+  priceUiSlider.reset();
+
+  for (const key in TYPE_FLATS) {
+
+    if (typeFieldElement.value === key) {
+      //Обновляем значение слайдера по объекту
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: TYPE_FLATS[key].price,
+          max: TYPE_FLATS[key].max ? TYPE_FLATS[key].max : 100000,
+        }
+      });
+
+      priceFieldElement.placeholder = `${TYPE_FLATS[key].price}`;
+    }
+  }
+}
 
 //---------Валидация Типа жилья------------//
 
@@ -173,4 +212,4 @@ capacityFieldElement.addEventListener('change', () => {
 });
 
 
-export { initValidate, priceUiSlider };
+export { initValidate, priceUiSlider, resetSlider };
