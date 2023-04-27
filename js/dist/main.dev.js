@@ -21,7 +21,4 @@ window.addEventListener('DOMContentLoaded', function () {
       (0, _form.toggleActivityForm)(false, _formValidate.priceUiSlider.destroy);
     }
   });
-}); //Доделать ОТправку формы!!!
-//Доделать ОТправку формы!!!
-//Доделать ОТправку формы!!!
-//Доделать ОТправку формы!!!
+});

@@ -3,6 +3,7 @@ import { toggleActivityForm } from './form.js';
 import { priceUiSlider } from './form-validate.js';
 import { getData } from './api.js';
 
+
 //Leaflet карта
 import { initMap } from './map.js';
 
@@ -23,8 +24,3 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
 });
-
-//Доделать ОТправку формы!!!
-//Доделать ОТправку формы!!!
-//Доделать ОТправку формы!!!
-//Доделать ОТправку формы!!!
