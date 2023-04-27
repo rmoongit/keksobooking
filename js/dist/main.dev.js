@@ -12,8 +12,8 @@ var _map = require("./map.js");
 window.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('load', function () {
     try {
-      //Инициализируем карту
       (0, _api.getData)(function (data) {
+        //Инициализируем карту
         (0, _map.initMap)(data.slice(0, 10));
       });
     } catch (error) {

@@ -3,9 +3,10 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.initFilter = void 0;
+exports.filterOffers = void 0;
 var filtersElement = document.querySelector('.map__filters');
 var filterControls = Array.from(filtersElement.children);
+var DEFAULT_VALUE = 'any';
 var housePrice = {
   low: {
     from: 0,
@@ -20,38 +21,47 @@ var housePrice = {
     to: Infinity
   }
 };
+var filterRules = {
+  'housing-type': function housingType(_ref, value) {
+    var type = _ref.type;
+    return value === type;
+  },
+  'housing-price': function housingPrice(_ref2, value) {
+    var price = _ref2.price;
+    return price >= housePrice[value].from && price < housePrice[value].to;
+  },
+  'housing-rooms': function housingRooms(_ref3, value) {
+    var rooms = _ref3.rooms;
+    return value === rooms.toString();
+  },
+  'housing-guests': function housingGuests(_ref4, value) {
+    var guests = _ref4.guests;
+    return value === guests.toString();
+  },
+  'housing-features': function housingFeatures(_ref5) {
+    var features = _ref5.features;
 
-var initFilter = function initFilter(data) {
-  filterControls.forEach(function (select) {
-    select.addEventListener('change', function (evt) {
-      var optionValue = evt.target.value;
-      data.filter(function (item) {
-        var _item$offer = item.offer,
-            type = _item$offer.type,
-            price = _item$offer.price,
-            rooms = _item$offer.rooms,
-            guests = _item$offer.guests;
-        var passFilter = true; // проверяем каждое свойство объекта на соответствие фильтру
+    if (!features) {
+      return false;
+    }
 
-        if (optionValue !== 'any' && type !== optionValue) {
-          passFilter = false;
-        } // пример сравнения цен
-
-
-        if (optionValue === 'low' && price >= housePrice.low.to) {
-          passFilter = false;
-        } else if (optionValue === 'middle' && (price < 10000 || price > 50000)) {
-          passFilter = false;
-        } else if (optionValue === 'high' && price <= 50000) {
-          passFilter = false;
-        } else {
-          passFilter = true;
-        }
-
-        return passFilter; // вернем только объекты, прошедшие все фильтры
+    var checkedCheckboxes = Array.from(filtersElement.querySelectorAll('[type="checkbox"]:checked'));
+    return checkedCheckboxes.every(function (_ref6) {
+      var value = _ref6.value;
+      return features.some(function (feature) {
+        return feature === value;
       });
     });
+  }
+};
+
+var filterOffers = function filterOffers(_ref7) {
+  var offer = _ref7.offer;
+  return filterControls.every(function (_ref8) {
+    var value = _ref8.value,
+        id = _ref8.id;
+    return value === DEFAULT_VALUE || filterRules[id](offer, value);
   });
 };
 
-exports.initFilter = initFilter;
+exports.filterOffers = filterOffers;

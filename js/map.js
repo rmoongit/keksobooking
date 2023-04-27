@@ -22,6 +22,7 @@ const map = L.map(mapBlockElement,
     wheelPxPerZoomLevel: 60,
   },
 )
+
   .on('load', () => {
   //При загрузке карты, форма доступна
     toggleActivityForm(true);
@@ -62,8 +63,7 @@ const setMarkerValue = () => {
 //Функция Инициализирует карту
 const initMap = (data) => {
   //получаем массив елементов data
-  const everPopup = createCards(data).childNodes;
-  const popupElements = Array.from(everPopup);
+  const popupElements = Array.from(createCards(data).childNodes);
 
   //Задаём параметры карты
   map.setView({

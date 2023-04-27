@@ -60,8 +60,7 @@ var setMarkerValue = function setMarkerValue() {
 
 var initMap = function initMap(data) {
   //получаем массив елементов data
-  var everPopup = (0, _generateData.createCards)(data).childNodes;
-  var popupElements = Array.from(everPopup); //Задаём параметры карты
+  var popupElements = Array.from((0, _generateData.createCards)(data).childNodes); //Задаём параметры карты
 
   map.setView({
     lat: defaultCoordinates.lat,

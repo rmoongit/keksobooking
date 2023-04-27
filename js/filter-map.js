@@ -1,6 +1,9 @@
 
+
 const filtersElement = document.querySelector('.map__filters');
 const filterControls = Array.from(filtersElement.children);
+
+const DEFAULT_VALUE = 'any';
 
 const housePrice = {
 
@@ -22,37 +25,22 @@ const housePrice = {
 
 };
 
-const initFilter = (data) => {
-
-  filterControls.forEach((select) => {
-    select.addEventListener('change', (evt) => {
-      const optionValue = evt.target.value;
-
-      data.filter((item) => {
-        const {type, price, rooms, guests} = item.offer;
-        let passFilter = true;
-
-        // проверяем каждое свойство объекта на соответствие фильтру
-        if (optionValue !== 'any' && type !== optionValue) {
-          passFilter = false;
-        }
-
-        // пример сравнения цен
-        if (optionValue === 'low' && price >= housePrice.low.to) {
-          passFilter = false;
-        } else if (optionValue === 'middle' && (price < 10000 || price > 50000)) {
-          passFilter = false;
-        } else if (optionValue === 'high' && price <= 50000) {
-          passFilter = false;
-        }
-        else {
-          passFilter = true;
-        }
-
-        return passFilter; // вернем только объекты, прошедшие все фильтры
-      });
-    });
-  });
+const filterRules = {
+  'housing-type': ({ type }, value) => value === type,
+  'housing-price': ({ price }, value) => price >= housePrice[value].from && price < housePrice[value].to,
+  'housing-rooms': ({ rooms }, value) => value === rooms.toString(),
+  'housing-guests': ({ guests }, value) => value === guests.toString(),
+  'housing-features': ({ features }) => {
+    if (!features) {
+      return false;
+    }
+    const checkedCheckboxes = Array.from(filtersElement.querySelectorAll('[type="checkbox"]:checked'));
+    return checkedCheckboxes.every(({ value }) => features.some((feature) => feature === value));
+  }
 };
 
-export { initFilter };
+const filterOffers = ({ offer }) =>
+  filterControls.every(({ value, id }) => value === DEFAULT_VALUE || filterRules[id](offer, value));
+
+
+export { filterOffers };
