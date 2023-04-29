@@ -6,18 +6,18 @@ import { resetMap } from './map.js';
 const reset = document.querySelector('.ad-form__reset');
 
 
-const forms = ['ad-form', 'map__filters'].map((selector) => {
-  const form = document.querySelector(`.${selector}`);
+const forms = ['.ad-form', '.map__filters'].map((selector) => {
+  const form = document.querySelector(`${selector}`);
   //Возвращаем новый объект: каждой формы, все поля форм, и класс disabled формы
   return {
     form,
-    parts: document.querySelectorAll('fieldset', 'select'),
+    parts: form.querySelectorAll('fieldset, select'),
     disabledClass: `${selector}--disabled`
   };
 });
 
 // Активирует и дезактивирует формы в зависимости от параметра true или false;
-const toggleActivityForm = (activate, onCloseHandler) => {
+const toggleActivityForm = (activate) => {
 //Вызываем валидацию
   initValidate();
 
@@ -41,11 +41,6 @@ const toggleActivityForm = (activate, onCloseHandler) => {
     });
 
   });
-
-  //проверяем если `false` - выполняем функцию
-  if (!activate) {
-    onCloseHandler();
-  }
 };
 
 export { toggleActivityForm, forms };

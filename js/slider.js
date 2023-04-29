@@ -1,4 +1,5 @@
 
+
 const createUiSlider = (sliderElement, minPrice, sliderHandler) => {
   const STEP = 1000;
 

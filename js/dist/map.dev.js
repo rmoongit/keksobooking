@@ -5,9 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.resetMap = exports.initMap = void 0;
 
-var _form = require("./form.js");
-
-var _generateData = require("./generate-data.js");
+var _createCard = require("./create-card.js");
 
 var _util = require("./util.js");
 
@@ -25,8 +23,6 @@ var map = L.map(mapBlockElement, //Опции карты
 {
   wheelPxPerZoomLevel: 60
 }).on('load', function () {
-  //При загрузке карты, форма доступна
-  (0, _form.toggleActivityForm)(true);
   map.scrollWheelZoom.enable();
 }); //Меняем главный маркер
 
@@ -36,10 +32,7 @@ var markerIcon = L.icon({
   iconAnchor: [26, 52]
 }); //Задаем главному маркеру параметры(опции)
 
-var mainMarker = L.marker({
-  lat: defaultCoordinates.lat,
-  lng: defaultCoordinates.lng
-}, {
+var mainMarker = L.marker(defaultCoordinates, {
   draggable: true,
   icon: markerIcon
 }); //Показываем координаты метки
@@ -59,13 +52,8 @@ var setMarkerValue = function setMarkerValue() {
 
 
 var initMap = function initMap(data) {
-  //получаем массив елементов data
-  var popupElements = Array.from((0, _generateData.createCards)(data).childNodes); //Задаём параметры карты
-
-  map.setView({
-    lat: defaultCoordinates.lat,
-    lng: defaultCoordinates.lng
-  }, mapZoom);
+  //Задаём параметры карты
+  map.setView(defaultCoordinates, mapZoom);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     minZoom: 6,
@@ -75,10 +63,10 @@ var initMap = function initMap(data) {
   mainMarker.addTo(map);
   var markerGroup = L.layerGroup().addTo(map); //Создаём метки из массива даты
 
-  data.forEach(function (item, index) {
-    var _item$location = item.location,
-        lat = _item$location.lat,
-        lng = _item$location.lng; //подставляем метки на основе данных локации
+  data.forEach(function (cardItem) {
+    var _cardItem$location = cardItem.location,
+        lat = _cardItem$location.lat,
+        lng = _cardItem$location.lng; //подставляем метки на основе данных локации
 
     var marker = L.marker({
       lat: (0, _util.getFixedNumber)(lat),
@@ -91,7 +79,7 @@ var initMap = function initMap(data) {
         iconAnchor: [26, 46]
       })
     });
-    marker.addTo(markerGroup).bindPopup(popupElements[index]);
+    marker.addTo(markerGroup).bindPopup((0, _createCard.createCard)(cardItem));
   });
   setMarkerValue();
 }; //Сбрасываем параметры карты

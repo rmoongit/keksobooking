@@ -10,19 +10,19 @@ var _formValidate = require("./form-validate.js");
 var _map = require("./map.js");
 
 var reset = document.querySelector('.ad-form__reset');
-var forms = ['ad-form', 'map__filters'].map(function (selector) {
-  var form = document.querySelector(".".concat(selector)); //Возвращаем новый объект: каждой формы, все поля форм, и класс disabled формы
+var forms = ['.ad-form', '.map__filters'].map(function (selector) {
+  var form = document.querySelector("".concat(selector)); //Возвращаем новый объект: каждой формы, все поля форм, и класс disabled формы
 
   return {
     form: form,
-    parts: document.querySelectorAll('fieldset', 'select'),
+    parts: form.querySelectorAll('fieldset, select'),
     disabledClass: "".concat(selector, "--disabled")
   };
 }); // Активирует и дезактивирует формы в зависимости от параметра true или false;
 
 exports.forms = forms;
 
-var toggleActivityForm = function toggleActivityForm(activate, onCloseHandler) {
+var toggleActivityForm = function toggleActivityForm(activate) {
   //Вызываем валидацию
   (0, _formValidate.initValidate)();
   forms.forEach(function (_ref) {
@@ -41,11 +41,7 @@ var toggleActivityForm = function toggleActivityForm(activate, onCloseHandler) {
       (0, _formValidate.resetSlider)();
       (0, _map.resetMap)();
     });
-  }); //проверяем если `false` - выполняем функцию
-
-  if (!activate) {
-    onCloseHandler();
-  }
+  });
 };
 
 exports.toggleActivityForm = toggleActivityForm;

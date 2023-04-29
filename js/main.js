@@ -1,25 +1,17 @@
 
 import { toggleActivityForm } from './form.js';
-import { priceUiSlider } from './form-validate.js';
 import { getData } from './api.js';
 
 //Leaflet карта
 import { initMap } from './map.js';
 
-window.addEventListener('DOMContentLoaded', () => {
-  window.addEventListener('load', () => {
+//Форма не доступна
+toggleActivityForm(false);
 
-    try {
-      getData((data) => {
-
-        //Инициализируем карту
-        initMap(data.slice(0,10));
-      });
-
-    } catch(error) {
-      //Форма не доступна
-      toggleActivityForm(false, priceUiSlider.destroy);
-    }
-  });
-
+getData((data) => {
+  //Инициализируем карту
+  initMap(data.slice(0,10));
+  //Форма доступна
+  toggleActivityForm(true);
 });
+

@@ -1,7 +1,8 @@
 
+import { forms } from './form.js';
 
-const filtersElement = document.querySelector('.map__filters');
-const filterControls = Array.from(filtersElement.children);
+const { form: filtersElement, parts } = forms[1];
+const filterControls = [...parts];
 
 const DEFAULT_VALUE = 'any';
 

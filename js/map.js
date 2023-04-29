@@ -1,6 +1,5 @@
 
-import { toggleActivityForm } from './form.js';
-import { createCards } from './generate-data.js';
+import { createCard } from './create-card.js';
 import { getFixedNumber } from './util.js';
 
 const mapZoom = 13;
@@ -24,8 +23,6 @@ const map = L.map(mapBlockElement,
 )
 
   .on('load', () => {
-  //При загрузке карты, форма доступна
-    toggleActivityForm(true);
     map.scrollWheelZoom.enable();
   });
 
@@ -37,11 +34,8 @@ const markerIcon = L.icon({
 });
 
 //Задаем главному маркеру параметры(опции)
-const mainMarker = L.marker(
-  {
-    lat: defaultCoordinates.lat,
-    lng:  defaultCoordinates.lng
-  },
+const mainMarker = L.marker(defaultCoordinates,
+
   {
     draggable: true,
     icon: markerIcon,
@@ -62,14 +56,9 @@ const setMarkerValue = () => {
 
 //Функция Инициализирует карту
 const initMap = (data) => {
-  //получаем массив елементов data
-  const popupElements = Array.from(createCards(data).childNodes);
 
   //Задаём параметры карты
-  map.setView({
-    lat: defaultCoordinates.lat,
-    lng:  defaultCoordinates.lng,
-  }, mapZoom);
+  map.setView(defaultCoordinates, mapZoom);
 
 
   L.tileLayer(
@@ -87,8 +76,8 @@ const initMap = (data) => {
   const markerGroup = L.layerGroup().addTo(map);
 
   //Создаём метки из массива даты
-  data.forEach((item, index) => {
-    const {lat, lng} = item.location;
+  data.forEach((cardItem) => {
+    const {lat, lng} = cardItem.location;
 
 
     //подставляем метки на основе данных локации
@@ -110,9 +99,7 @@ const initMap = (data) => {
 
     marker
       .addTo(markerGroup)
-      .bindPopup(
-        popupElements[index]
-      );
+      .bindPopup(createCard(cardItem));
   });
 
   setMarkerValue();
