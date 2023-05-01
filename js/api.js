@@ -22,18 +22,16 @@ const postData = (body, unblockButton, onSuccess, onError) => {
   const postUrl = 'https://26.javascript.pages.academy/keksobooking';
 
   fetch(postUrl, {
-    method: 'POST',  body,  type: 'multipart/form-data',
-  },
-  )
-
+    method: 'POST',
+    body,
+    type: 'multipart/form-data'
+  })
     .then((response) => {
       //Проверка если ответ сервера "ок(200)"
-      if(response.ok) {
+      if (response.ok) {
         unblockButton();
         onSuccess();
-      }
-
-      else {
+      } else {
         onError();
       }
     })
@@ -43,7 +41,4 @@ const postData = (body, unblockButton, onSuccess, onError) => {
     });
 };
 
-
 export { getData, postData };
-
-

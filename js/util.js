@@ -1,16 +1,13 @@
-import { forms } from './form.js';
-import { resetMap } from './map.js';
-import { resetSlider } from './form-validate.js';
+import { forms } from './forms.js';
 
 const templateSuccess = document.querySelector('#success').content.querySelector('.success');
 const templateError = document.querySelector('#error').content.querySelector('.error');
 const body = document.querySelector('body');
 
-let clone;
+let cloneElement;
 
 //Нажатие на кнопку "Escape".
 const isEscapeKey = (evt) => evt.key === 'Escape';
-
 
 // Функция генерирует случайное число от минимума(включая) до максимума
 const getRandomInteger = (min, max) => {
@@ -21,7 +18,7 @@ const getRandomInteger = (min, max) => {
 
 // Функция генерирует случайные числа с плавающей точкой
 function getRandomFloat(min, max, decimals = 1) {
-  const result = (Math.random() * (max - min) + min);
+  const result = Math.random() * (max - min) + min;
 
   return +result.toFixed(decimals);
 }
@@ -33,7 +30,6 @@ const getRandomArrayElement = (elements) => elements[getRandomInteger(0, element
 
 // Функция с ведущим нулём
 const getNumberWithLeadZero = (num) => `${num < 10 ? '0' : ''}${num}`;
-
 
 // Функция генерирует строку с Аватркой
 const generateAvatar = (num) => {
@@ -68,47 +64,42 @@ const showAlert = (message) => {
 
 //Покаываеи окно успешной отправки
 const showSuccess = () => {
-  clone = templateSuccess.cloneNode(true);
+  cloneElement = templateSuccess.cloneNode(true);
 
-  body.append(clone);
-  //Очищаем поля форм и сбрасываем слайдер с картой
-  forms.forEach((item) => item.form.reset());
-  resetMap();
-  resetSlider();
+  body.append(cloneElement);
+  //очищаем поля форм
+  forms.forEach(({ formElement }) => formElement.reset());
 
   document.addEventListener('keydown', closeOnEsc);
-  clone.addEventListener('click', () => {
+  cloneElement.addEventListener('click', () => {
     //проверяем если елемент есть - удаляем
-    if (clone) {
-      clone.remove();
+    if (cloneElement) {
+      cloneElement.remove();
     }
   });
-
 };
 
 //Покаываеи окно если отправка не успешна
 const showError = () => {
-  clone = templateError.cloneNode(true);
-  const errorButton = clone.querySelector('.error__button');
+  cloneElement = templateError.cloneNode(true);
+  const errorButton = cloneElement.querySelector('.error__button');
 
-  body.append(clone);
+  body.append(cloneElement);
 
   document.addEventListener('keydown', closeOnEsc);
   document.addEventListener('click', (evt) => {
-
     if (evt.target.closest('.error') || evt.target === errorButton) {
-      clone.remove();
+      cloneElement.remove();
     }
   });
 };
 
 //Удаляем блок на нажатие 'Esc'
 function closeOnEsc(evt) {
-  if(isEscapeKey(evt)) {
-    clone.remove();
+  if (isEscapeKey(evt)) {
+    cloneElement.remove();
   }
 }
-
 
 export {
   getRandomInteger,
@@ -120,5 +111,5 @@ export {
   showAlert,
   getFixedNumber,
   showSuccess,
-  showError,
+  showError
 };

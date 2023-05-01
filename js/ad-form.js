@@ -2,22 +2,23 @@ import { TYPE_FLATS } from './mocks.js';
 import { createUiSlider } from './slider.js';
 import { postData } from './api.js';
 import { showSuccess, showError } from './util.js';
+import { resetMap } from './map.js';
+import { forms } from './forms.js';
 
-const form = document.querySelector('.ad-form');
-const formButtonElement = form.querySelector('.ad-form__submit');
+const { formElement } = forms[0];
+const formButtonElement = formElement.querySelector('.ad-form__submit');
 
-
-const titleFieldElement = form.querySelector('[name="title"]');
-const priceFieldElement = form.querySelector('[name="price"]');
+const titleFieldElement = formElement.querySelector('[name="title"]');
+const priceFieldElement = formElement.querySelector('[name="price"]');
 
 //slider
 const sliderElement = document.querySelector('.ad-form__slider');
 
 //roomsFields
-const roomsFieldElement = form.querySelector('[name="rooms"]');
-const capacityFieldElement = form.querySelector('[name="capacity"]');
+const roomsFieldElement = formElement.querySelector('[name="rooms"]');
+const capacityFieldElement = formElement.querySelector('[name="capacity"]');
 
-const typeFieldElement = form.querySelector('[name="type"]');
+const typeFieldElement = formElement.querySelector('[name="type"]');
 
 //timeFields
 const timeFieldset = document.querySelector('.ad-form__element--time');
@@ -33,7 +34,7 @@ const RoomToGuests = {
 
 const limit = 100000;
 
-const pristine = new Pristine(form, {
+const pristine = new Pristine(formElement, {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element',
   errorTextTag: 'div',
@@ -45,31 +46,10 @@ const buttonBlock = () => {
   formButtonElement.textContent = 'Опубликовываю...';
 };
 
-
 const buttonUnBlock = () => {
   formButtonElement.removeAttribute('disabled');
   formButtonElement.textContent = 'Опубликовать';
 };
-
-//Иницилизация валидации
-const initValidate = () => {
-
-  //Отправка формы
-  form.addEventListener('submit', (evt) => {
-
-    const valid = pristine.validate();
-    evt.preventDefault();
-
-    if (valid) {
-      buttonBlock();
-      //Выполняем запрос postData(с аргументами)
-      return postData(new FormData(evt.target),  () => buttonUnBlock(), () => showSuccess(), () => showError());
-    }
-    //В случае невалидности, возвращаем ошибку
-    return showError();
-  });
-};
-
 
 //---------Валидация Заголовка------------//
 
@@ -84,7 +64,6 @@ const checkStringLength = (value) => {
 
 // Проверка на количество гостей
 const validCapacity = () => {
-
   if (RoomToGuests[roomsFieldElement.value].includes(capacityFieldElement.value)) {
     return true;
   }
@@ -96,7 +75,6 @@ const validCapacityMessage = () => {
   const value = roomsFieldElement.value;
 
   switch (value) {
-
     case '1':
       return `${value} комната для ${value} кота`;
 
@@ -124,13 +102,12 @@ function resetSlider() {
   priceUiSlider.reset();
 
   for (const key in TYPE_FLATS) {
-
     if (typeFieldElement.value === key) {
       //Обновляем значение слайдера по объекту
       sliderElement.noUiSlider.updateOptions({
         range: {
           min: TYPE_FLATS[key].price,
-          max: TYPE_FLATS[key].max ? TYPE_FLATS[key].max : 100000,
+          max: TYPE_FLATS[key].max ? TYPE_FLATS[key].max : 100000
         }
       });
 
@@ -143,9 +120,7 @@ function resetSlider() {
 
 //Задаём минимальную цену - если выбран данный ${target}
 typeFieldElement.addEventListener('change', (evt) => {
-
   for (const key in TYPE_FLATS) {
-
     if (evt.target.value === key) {
       priceFieldElement.value = '';
       priceFieldElement.placeholder = `${TYPE_FLATS[key].price}`;
@@ -156,7 +131,7 @@ typeFieldElement.addEventListener('change', (evt) => {
           min: TYPE_FLATS[key].price,
           max: TYPE_FLATS[key].max ? TYPE_FLATS[key].max : 100000
         },
-        step: TYPE_FLATS[key].step,
+        step: TYPE_FLATS[key].step
       });
       sliderElement.noUiSlider.set(TYPE_FLATS[key].price);
     }
@@ -165,17 +140,14 @@ typeFieldElement.addEventListener('change', (evt) => {
 
 //Проверяем заданную ценну с текущей
 const checkPricePlaceholder = () => {
-
   const placeholder = Number(priceFieldElement.placeholder);
   priceFieldElement.value = parseInt(priceFieldElement.value, 10 || 0);
-
 
   return priceFieldElement.value >= placeholder && priceFieldElement.value <= limit;
 };
 
 // Получаем сообщение ошибки цены
 const getPriceMessage = () => {
-
   if (priceFieldElement.value >= limit) {
     return 'Максимальная цена 100 000';
   }
@@ -187,7 +159,6 @@ const getPriceMessage = () => {
 
 //Проверяем время заезда между собой
 timeFieldset.addEventListener('change', (evt) => {
-
   if (evt.target.value !== timeIn.value) {
     timeIn.value = evt.target.value;
   }
@@ -196,7 +167,6 @@ timeFieldset.addEventListener('change', (evt) => {
     timeOut.value = evt.target.value;
   }
 });
-
 
 // Валидация заголовка
 pristine.addValidator(titleFieldElement, checkStringLength, 'Максимальная длина 100 символов.');
@@ -211,5 +181,33 @@ capacityFieldElement.addEventListener('change', () => {
   pristine.validate(roomsFieldElement);
 });
 
+//Иницилизация валидации
+const initAdForm = () => {
+  //Отправка формы
+  formElement.addEventListener('submit', (evt) => {
+    const valid = pristine.validate();
+    evt.preventDefault();
 
-export { initValidate, priceUiSlider, resetSlider };
+    if (valid) {
+      buttonBlock();
+      //Выполняем запрос postData(с аргументами)
+      return postData(
+        new FormData(evt.target),
+        () => buttonUnBlock(),
+        () => showSuccess(),
+        () => showError()
+      );
+    }
+    //В случае невалидности, возвращаем ошибку
+    return showError();
+  });
+
+  //Очищаем форму
+  formElement.addEventListener('reset', () => {
+    pristine.reset();
+    resetSlider();
+    resetMap();
+  });
+};
+
+export { initAdForm };

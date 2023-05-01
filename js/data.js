@@ -1,52 +1,32 @@
-import {
-  getRandomFloat,
-  generateAvatar,
-  getRandomArrayElement,
-  getRandomInteger,
-  shuffledArray,
+import { getRandomFloat, generateAvatar, getRandomArrayElement, getRandomInteger, shuffledArray } from './util.js';
 
-} from './util.js';
-
-import {
-  TYPE_FLATS,
-
-} from './mocks.js';
+import { TYPE_FLATS } from './mocks.js';
 
 const LOCATION = {
   MIN_LAT: 35.65,
   MAX_LAT: 35.7,
   MIN_LNG: 139.7,
-  MAX_LNG: 139.8,
+  MAX_LNG: 139.8
 };
 
 const ROOMS = {
   min: 1,
-  max: 5,
+  max: 5
 };
 
 const GUESTS = {
   min: 1,
-  max: 5,
+  max: 5
 };
 
 const PRICES = {
   min: 1000,
-  max: 5000,
+  max: 5000
 };
 
-const CHECK_IN_OUT = [
-  '12:00',
-  '13:00',
-  '14:00'
-];
+const CHECK_IN_OUT = ['12:00', '13:00', '14:00'];
 
-const OFFERS = [
-  'Уютная',
-  'Ретро стиль',
-  'Новый лофт',
-  'Евро стандарт',
-  'Фаворит',
-];
+const OFFERS = ['Уютная', 'Ретро стиль', 'Новый лофт', 'Евро стандарт', 'Фаворит'];
 
 const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
@@ -55,7 +35,7 @@ const DESCRIPTIONS = [
   'Можно с детьми',
   'Собственный паркинг с лаунж зоной',
   'Детский парк и комната для детей',
-  'Завтрак и Обед включены',
+  'Завтрак и Обед включены'
 ];
 
 const PHOTOS = [
@@ -68,16 +48,15 @@ const getRandomCheckIndex = () => getRandomInteger(0, CHECK_IN_OUT.length - 1);
 
 // Создаёт Объект
 const createObject = (id = 1) => {
-  const {MIN_LAT, MAX_LAT, MIN_LNG, MAX_LNG} = LOCATION;
+  const { MIN_LAT, MAX_LAT, MIN_LNG, MAX_LNG } = LOCATION;
   const lat = getRandomFloat(MIN_LAT, MAX_LAT, 5);
   const lng = getRandomFloat(MIN_LNG, MAX_LNG, 5);
   //Формируем массив случайных индексов
   const checks = [getRandomCheckIndex(), getRandomCheckIndex()];
 
-
   return {
     author: {
-      avatar: generateAvatar(id),
+      avatar: generateAvatar(id)
     },
 
     offer: {
@@ -91,17 +70,17 @@ const createObject = (id = 1) => {
       checkout: CHECK_IN_OUT[Math.max(...checks)],
       features: shuffledArray(FEATURES).slice(0, getRandomInteger(0, FEATURES.length)),
       description: getRandomArrayElement(DESCRIPTIONS),
-      photos: shuffledArray(PHOTOS).slice(0, getRandomInteger(0, PHOTOS.length)),
+      photos: shuffledArray(PHOTOS).slice(0, getRandomInteger(0, PHOTOS.length))
     },
 
     location: {
       lat,
-      lng,
+      lng
     }
   };
 };
 
 // Создаёт массив наших объектов
-const createMocks = Array.from({length: 5}, (_, id) => createObject(++id));
+const createMocks = Array.from({ length: 5 }, (_, id) => createObject(++id));
 
 export { createMocks };

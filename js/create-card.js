@@ -6,7 +6,6 @@ const photoTemplateElement = cardTemplateElement.querySelector('.popup__photo');
 // Наполняет элемент по заданному селектору и возвращает его
 const getElementFiller = (template) => {
   const fillElement = (selector, data = '', createChildElement) => {
-
     const element = template.querySelector(selector);
     const content = data.toString();
 
@@ -16,13 +15,10 @@ const getElementFiller = (template) => {
         data.forEach((item) => {
           element.append(createChildElement(item));
         });
-
       } else {
         element.textContent = data.join(', ');
       }
-    }
-
-    else if (content) {
+    } else if (content) {
       element.textContent = content;
     } else {
       element.classList.add('visually-hidden');
@@ -32,10 +28,8 @@ const getElementFiller = (template) => {
   return fillElement;
 };
 
-
 // Генерирует карточку с данными что входят в неё
-const createCard = ({author = {}, offer = {} }) => {
-
+const createCard = ({ author = {}, offer = {} }) => {
   const cardElement = cardTemplateElement.cloneNode(true);
 
   const fillElement = getElementFiller(cardElement);
@@ -80,10 +74,8 @@ const createCard = ({author = {}, offer = {} }) => {
     avatarElement.remove();
   }
 
-
   //возвращаем заполненую карточку
   return cardElement;
 };
 
 export { createCard };
-

@@ -1,7 +1,6 @@
-
-import { toggleActivityForm } from './form.js';
+import { toggleActivityForm } from './forms.js';
 import { getData } from './api.js';
-
+import { initAdForm } from './ad-form.js';
 //Leaflet карта
 import { initMap } from './map.js';
 
@@ -10,8 +9,9 @@ toggleActivityForm(false);
 
 getData((data) => {
   //Инициализируем карту
-  initMap(data.slice(0,10));
+  initMap(data.slice(0, 10));
+  //Инициализируем форму отправки
+  initAdForm();
   //Форма доступна
   toggleActivityForm(true);
 });
-
