@@ -98,21 +98,20 @@ const priceUiSlider = createUiSlider(sliderElement, priceFieldElement, () => {
 
 //Сбрасываем Слайдер
 function resetSlider() {
-  //Сброс самого слайда
-  priceUiSlider.reset();
-
   for (const key in TYPE_FLATS) {
-    if (typeFieldElement.value === key) {
-      //Обновляем значение слайдера по объекту
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: TYPE_FLATS[key].price,
-          max: TYPE_FLATS[key].max ? TYPE_FLATS[key].max : 100000
-        }
-      });
+    priceFieldElement.placeholder = `${TYPE_FLATS[key].price}`;
 
-      priceFieldElement.placeholder = `${TYPE_FLATS[key].price}`;
-    }
+    //Обновляем значение слайдера по объекту
+    sliderElement.noUiSlider.updateOptions({
+      range: {
+        min: TYPE_FLATS[key].price,
+        max: TYPE_FLATS[key].max ? TYPE_FLATS[key].max : 100000
+      },
+      step: TYPE_FLATS[key].step
+    });
+
+    //Сброс самого слайда
+    priceUiSlider.reset();
   }
 }
 

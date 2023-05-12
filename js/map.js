@@ -1,6 +1,6 @@
 import { createCard } from './create-card.js';
 import { getFixedNumber } from './util.js';
-import { filteredData } from './filter-map.js';
+import { initFilters } from './filter-map.js';
 
 //Блок куда вставляем карту
 const mapBlockElement = document.querySelector('#map-canvas');
@@ -106,7 +106,7 @@ const initMap = (data) => {
   setMarkerValue();
 
   //Рендерим данные и создаём метки
-  renderMap(filteredData(data));
+  initFilters(data);
 };
 //Сбрасываем параметры карты
 const resetMap = () => {

@@ -1,5 +1,6 @@
 import { forms } from './forms.js';
 import { renderMap } from './map.js';
+import { debounce } from './util.js';
 
 const { formElement, partElements } = forms[1];
 const filterControls = [...partElements];
@@ -23,6 +24,9 @@ const housePrice = {
   }
 };
 
+const DEBOUNCE_TIMER = 500;
+
+//Правила где мы сравниваем значение кнопки с передаваемым объектом
 const filterRules = {
   'housing-type': ({ type }, value) => value === type,
   'housing-price': ({ price }, value) => price >= housePrice[value].from && price < housePrice[value].to,
@@ -40,13 +44,11 @@ const filterRules = {
 const filterData = ({ offer }) =>
   filterControls.every(({ value, id }) => value === DEFAULT_VALUE || filterRules[id](offer, value));
 
-const filteredData = (data) => {
-  const offerLength = data.length > 0;
-  const newOffer = offerLength ? data.filter(filterData) : data;
-
-  return newOffer;
+const initFilters = (data) => {
+  formElement.addEventListener(
+    'change',
+    debounce(() => renderMap(data.filter(filterData)), DEBOUNCE_TIMER)
+  );
 };
 
-formElement.addEventListener('change', filteredData);
-
-export { filterData, formElement, filteredData };
+export { formElement, initFilters };

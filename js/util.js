@@ -101,6 +101,15 @@ function closeOnEsc(evt) {
   }
 }
 
+//Функция Устранение дребезга
+const debounce = (callback, timer) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, args), timer);
+  };
+};
+
 export {
   getRandomInteger,
   getRandomFloat,
@@ -111,5 +120,6 @@ export {
   showAlert,
   getFixedNumber,
   showSuccess,
-  showError
+  showError,
+  debounce
 };
