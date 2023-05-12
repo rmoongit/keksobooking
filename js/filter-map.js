@@ -1,7 +1,8 @@
 import { forms } from './forms.js';
+import { renderMap } from './map.js';
 
-const { form: filtersElement, parts } = forms[1];
-const filterControls = [...parts];
+const { formElement, partElements } = forms[1];
+const filterControls = [...partElements];
 
 const DEFAULT_VALUE = 'any';
 
@@ -31,12 +32,21 @@ const filterRules = {
     if (!features) {
       return false;
     }
-    const checkedCheckboxes = Array.from(filtersElement.querySelectorAll('[type="checkbox"]:checked'));
+    const checkedCheckboxes = Array.from(formElement.querySelectorAll('[type="checkbox"]:checked'));
     return checkedCheckboxes.every(({ value }) => features.some((feature) => feature === value));
   }
 };
 
-const filterOffers = ({ offer }) =>
-  filterControls.every(({ value, index }) => value === DEFAULT_VALUE || filterRules[index](offer, value));
+const filterData = ({ offer }) =>
+  filterControls.every(({ value, id }) => value === DEFAULT_VALUE || filterRules[id](offer, value));
 
-export { filterOffers };
+const filteredData = (data) => {
+  const offerLength = data.length > 0;
+  const newOffer = offerLength ? data.filter(filterData) : data;
+
+  return newOffer;
+};
+
+formElement.addEventListener('change', filteredData);
+
+export { filterData, formElement, filteredData };

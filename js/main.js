@@ -9,7 +9,7 @@ toggleActivityForm(false);
 
 getData((data) => {
   //Инициализируем карту
-  initMap(data.slice(0, 10));
+  initMap(data);
   //Инициализируем форму отправки
   initAdForm();
   //Форма доступна

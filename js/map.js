@@ -1,5 +1,11 @@
 import { createCard } from './create-card.js';
 import { getFixedNumber } from './util.js';
+import { filteredData } from './filter-map.js';
+
+//Блок куда вставляем карту
+const mapBlockElement = document.querySelector('#map-canvas');
+//строка адреса
+const addressElement = document.querySelector('[name="address"]');
 
 const mapZoom = 13;
 
@@ -7,11 +13,6 @@ const defaultCoordinates = {
   lat: 35.680052,
   lng: 139.764953
 };
-
-//Блок куда вставляем карту
-const mapBlockElement = document.querySelector('#map-canvas');
-//строка адреса
-const addressElement = document.querySelector('[name="address"]');
 
 //Создаём карту
 const map = L.map(
@@ -41,6 +42,8 @@ const mainMarker = L.marker(
   }
 );
 
+const markerGroup = L.layerGroup().addTo(map);
+
 //Показываем координаты метки
 const setMarkerValue = () => {
   addressElement.value = `${getFixedNumber(defaultCoordinates.lat)}, ${getFixedNumber(defaultCoordinates.lng)}`;
@@ -50,6 +53,38 @@ const setMarkerValue = () => {
     const { lat, lng } = evt.target.getLatLng();
     //Получаем координаты главой метки при перетаскивании
     addressElement.value = `${getFixedNumber(lat)}, ${getFixedNumber(lng)}`;
+  });
+};
+
+//Создаёт кастомные метки
+const createMarker = (createTemplate) => {
+  const { lat, lng } = createTemplate.location;
+
+  const marker = L.marker(
+    {
+      lat: getFixedNumber(lat),
+      lng: getFixedNumber(lng)
+    },
+
+    {
+      draggable: false,
+      icon: L.icon({
+        iconUrl: 'img/pin.svg',
+        iconSize: [40, 40],
+        iconAnchor: [26, 46]
+      })
+    }
+  );
+
+  marker.addTo(markerGroup).bindPopup(createCard(createTemplate));
+};
+
+//Вывод данных полученых в карту
+const renderMap = (data) => {
+  markerGroup.clearLayers();
+
+  data.forEach((dataItem) => {
+    createMarker(dataItem);
   });
 };
 
@@ -64,38 +99,15 @@ const initMap = (data) => {
     maxZoom: 15
   }).addTo(map);
 
-  //Вставляем маркер в карту
+  //Вставляем основной маркер на карту
   mainMarker.addTo(map);
 
-  const markerGroup = L.layerGroup().addTo(map);
-
-  //Создаём метки из массива даты
-  data.forEach((cardItem) => {
-    const { lat, lng } = cardItem.location;
-
-    //подставляем метки на основе данных локации
-    const marker = L.marker(
-      {
-        lat: getFixedNumber(lat),
-        lng: getFixedNumber(lng)
-      },
-
-      {
-        draggable: false,
-        icon: L.icon({
-          iconUrl: 'img/pin.svg',
-          iconSize: [40, 40],
-          iconAnchor: [26, 46]
-        })
-      }
-    );
-
-    marker.addTo(markerGroup).bindPopup(createCard(cardItem));
-  });
-
+  //Устанавливаем значение маркера
   setMarkerValue();
-};
 
+  //Рендерим данные и создаём метки
+  renderMap(filteredData(data));
+};
 //Сбрасываем параметры карты
 const resetMap = () => {
   map.setView(defaultCoordinates, mapZoom);
@@ -105,4 +117,4 @@ const resetMap = () => {
   map.closePopup();
 };
 
-export { initMap, resetMap };
+export { initMap, resetMap, renderMap };
