@@ -4,6 +4,7 @@ import { postData } from './api.js';
 import { showSuccess, showError } from './util.js';
 import { resetMap } from './map.js';
 import { forms } from './forms.js';
+import { initImageControl } from './upload-photo.js';
 
 const { formElement } = forms[0];
 const formButtonElement = formElement.querySelector('.ad-form__submit');
@@ -24,6 +25,15 @@ const typeFieldElement = formElement.querySelector('[name="type"]');
 const timeFieldset = document.querySelector('.ad-form__element--time');
 const timeIn = document.querySelector('[name="timein"]');
 const timeOut = document.querySelector('[name="timeout"]');
+
+//choserPhotos
+const choseAvatarElement = document.querySelector('#avatar');
+const previewAvatarElement = document.querySelector('.ad-form-header__preview');
+const chosePhotoElement = document.querySelector('#images');
+const previewPhotoElement = document.querySelector('.ad-form__photo');
+
+const clearAvatar = initImageControl(choseAvatarElement, previewAvatarElement);
+const clearPhoto = initImageControl(chosePhotoElement, previewPhotoElement);
 
 const RoomToGuests = {
   1: ['1'],
@@ -105,7 +115,7 @@ function resetSlider() {
     sliderElement.noUiSlider.updateOptions({
       range: {
         min: TYPE_FLATS[key].price,
-        max: TYPE_FLATS[key].max ? TYPE_FLATS[key].max : 100000
+        max: TYPE_FLATS[key].max ? TYPE_FLATS[key].max : limit
       },
       step: TYPE_FLATS[key].step
     });
@@ -128,7 +138,7 @@ typeFieldElement.addEventListener('change', (evt) => {
       sliderElement.noUiSlider.updateOptions({
         range: {
           min: TYPE_FLATS[key].price,
-          max: TYPE_FLATS[key].max ? TYPE_FLATS[key].max : 100000
+          max: TYPE_FLATS[key].max ? TYPE_FLATS[key].max : limit
         },
         step: TYPE_FLATS[key].step
       });
@@ -148,7 +158,7 @@ const checkPricePlaceholder = () => {
 // Получаем сообщение ошибки цены
 const getPriceMessage = () => {
   if (priceFieldElement.value >= limit) {
-    return 'Максимальная цена 100 000';
+    return `Максимальная цена ${limit}`;
   }
 
   return `Минимальная цена ${priceFieldElement.placeholder}`;
@@ -204,6 +214,8 @@ const initAdForm = () => {
     pristine.reset();
     resetSlider();
     resetMap();
+    clearAvatar();
+    clearPhoto();
   });
 };
 
